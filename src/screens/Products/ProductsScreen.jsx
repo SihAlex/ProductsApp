@@ -1,64 +1,49 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import useCount from "@/hooks/useCount";
 import ProductDetails from "./ProductDetails/ProductDetails";
 import ProductsItem from "./ProductItem/ProductItem";
+import useTotalCount from "@/hooks/useTotalCount";
 
-class ProductsScreen extends Component {
-  state = {
-    count: 0,
-    totalCount: 0,
-    selectedProduct: null,
+const ProductsScreen = ({ products, category }) => {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [count, add, remove] = useCount();
+  const [totalCount, renderedCount] = useTotalCount();
+
+  useEffect(() => {
+    console.log(`Now selected ${selectedProduct}`);
+  }, [selectedProduct]);
+
+  const selectProduct = (product) => {
+    setSelectedProduct(product);
   };
 
-  add = () => {
-    this.setState((prev) => ({
-      count: prev.count + 1,
-    }));
-  };
-  remove = () => {
-    this.setState((prev) => ({
-      count: prev.count - 1,
-    }));
-  };
-  renderedCount = (unmount) => {
-    this.setState((prev) => ({
-      totalCount: unmount ? prev.totalCount - 1 : prev.totalCount + 1,
-    }));
-  };
-  selectProduct = (product) => {
-    this.setState({ selectedProduct: product });
-  };
-  render() {
-    const { products, category } = this.props;
-    const { count, totalCount, selectedProduct } = this.state;
-
-    return (
-      <>
-        <h3>Total: {totalCount}</h3>
-        <h3>Selected: {count}</h3>
-        <ProductsContainer>
-          <Ul>
-            {products
-              .filter((product) =>
-                category ? product.category === this.props.category : true
-              )
-              .map((product) => (
-                <ProductsItem
-                  key={product.id}
-                  item={product}
-                  add={this.add}
-                  remove={this.remove}
-                  renderedCount={this.renderedCount}
-                  selectProduct={this.selectProduct}
-                />
-              ))}
-          </Ul>
-          {selectedProduct && <ProductDetails product={selectedProduct} />}
-        </ProductsContainer>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <h3>Total: {totalCount}</h3>
+      <h3>Selected: {count}</h3>
+      <ProductsContainer>
+        <Ul>
+          {products
+            .filter((product) =>
+              category ? product.category === category : true
+            )
+            .map((product) => (
+              <ProductsItem
+                key={product.id}
+                item={product}
+                add={add}
+                remove={remove}
+                renderedCount={renderedCount}
+                selectProduct={selectProduct}
+              />
+            ))}
+        </Ul>
+        {selectedProduct && <ProductDetails product={selectedProduct} />}
+      </ProductsContainer>
+    </>
+  );
+};
 
 const Ul = styled.ul`
   width: 250px;

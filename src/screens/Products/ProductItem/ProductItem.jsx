@@ -1,34 +1,25 @@
-import { Component } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 
-class ProductsItem extends Component {
-  componentDidMount() {
-    const { renderedCount } = this.props;
-    this.props.renderedCount();
-  }
+const ProductsItem = ({ renderedCount, item, selectProduct, add, remove }) => {
+  useEffect(() => {
+    renderedCount();
+    return () => renderedCount(true);
+  }, []);
 
-  componentWillUnmount() {
-    const { renderedCount } = this.props;
-    this.props.renderedCount(true);
-  }
-
-  handleCheck = (e) => {
-    const { add, remove } = this.props;
+  const handleCheck = (e) => {
     e.target.checked ? add() : remove();
   };
 
-  render() {
-    const { item } = this.props;
-    return (
-      <Li>
-        <h3>
-          <a onClick={() => this.props.selectProduct(item)}>{item.name}</a>
-        </h3>
-        <input type="checkbox" onChange={this.handleCheck} />
-      </Li>
-    );
-  }
-}
+  return (
+    <Li>
+      <h3>
+        <a onClick={() => selectProduct(item)}>{item.name}</a>
+      </h3>
+      <input type="checkbox" onChange={handleCheck} />
+    </Li>
+  );
+};
 
 const Li = styled.li`
   display: flex;

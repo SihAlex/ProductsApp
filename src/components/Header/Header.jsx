@@ -1,7 +1,10 @@
+import useLogin from "@/hooks/useLogin";
 import Menu from "components/Menu/Menu";
 import styled from "styled-components";
 
-const Header = ({ changeCategory, toggleLogIn, isLoggedIn }) => {
+const Header = ({ changeCategory }) => {
+  const [isLoggedIn, toggleLogIn] = useLogin();
+
   return (
     <HeaderContainer>
       <Menu changeCategory={changeCategory} />
