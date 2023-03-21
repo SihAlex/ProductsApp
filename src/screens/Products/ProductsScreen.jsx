@@ -11,7 +11,7 @@ const ProductsScreen = ({ products, category }) => {
   const [totalCount, renderedCount] = useTotalCount();
 
   useEffect(() => {
-    console.log(`Now selected ${selectedProduct}`);
+    console.log(`Now selected ${selectedProduct?.name}`);
   }, [selectedProduct]);
 
   const selectProduct = (product) => {
