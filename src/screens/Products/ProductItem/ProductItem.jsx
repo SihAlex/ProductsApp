@@ -1,10 +1,13 @@
 import { setActive } from "@/routes/main";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { CSSTransition } from "react-transition-group";
 import styled from "styled-components";
+import styles from "./ProductItem.module.css";
 
 const ProductsItem = ({ renderedCount, item, add, remove }) => {
   const [value, setValue] = useState(false);
+  const ref = useRef(null);
 
   useEffect(() => {
     renderedCount();
@@ -19,12 +22,24 @@ const ProductsItem = ({ renderedCount, item, add, remove }) => {
   };
 
   return (
-    <Li>
-      <NavLink to={`${item.id}`} style={setActive}>
-        {item.name || "All"}
-      </NavLink>
-      <input type="checkbox" onChange={handleCheck} value={value} />
-    </Li>
+    <CSSTransition
+      in={true}
+      nodeRef={ref}
+      timeout={500}
+      classNames={{
+        enterActive: styles["product-enter"],
+        enterDone: styles["product-enter-active"],
+        exitActive: styles["product-exit-active"],
+        exitDone: styles["product-exit"],
+      }}
+    >
+      <Li ref={ref}>
+        <NavLink to={`${item.id}`} style={setActive}>
+          {item.name || "All"}
+        </NavLink>
+        <input type="checkbox" onChange={handleCheck} value={value} />
+      </Li>
+    </CSSTransition>
   );
 };
 

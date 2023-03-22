@@ -4,10 +4,12 @@ import styled from "styled-components";
 import { products } from "@/data/dummy";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button/Button";
+import Alert from "@/components/Alert/Alert";
 
 const ProductDetails = () => {
   const [text, setText] = useState("");
   const [product, setProduct] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
 
   const { productId } = useParams();
 
@@ -22,7 +24,7 @@ const ProductDetails = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    alert(`Your response '${text}' was succesfully submitted!`);
+    setShowAlert(true);
   };
 
   return (
@@ -44,6 +46,12 @@ const ProductDetails = () => {
           </Form>
         </DetailsContainer>
       )}
+
+      <Alert
+        message={`Your response '${text}' was succesfully submitted!`}
+        show={showAlert}
+        setShow={setShowAlert}
+      />
     </>
   );
 };
