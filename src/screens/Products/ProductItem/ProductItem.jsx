@@ -23,7 +23,7 @@ const ProductsItem = ({ renderedCount, item, add, remove }) => {
 
   return (
     <CSSTransition
-      in={true}
+      in={"true"}
       nodeRef={ref}
       timeout={500}
       classNames={{

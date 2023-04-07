@@ -1,19 +1,32 @@
 import { AuthContext } from "@/contexts/authContext";
-import { setActive } from "@/routes/main";
-import { Form, Modal } from "antd";
+import { Modal } from "antd";
 import Menu from "components/Menu/Menu";
 import { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../Button/Button";
 import SignInForm from "./SignInForm/SignInForm";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 const Header = ({ headerRef }) => {
   const { user, signIn, signOut } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const [form] = Form.useForm();
+  const usernameNotLongEnough = "Username must be at least 3 characters";
+  const requiredField = (fieldName) => `${fieldName} is required.`;
+
+  const validationSchema = yup.object().shape({
+    username: yup
+      .string()
+      .min(3, usernameNotLongEnough)
+      .max(40)
+      .required(requiredField("Username")),
+    password: yup
+      .string()
+      .matches(/^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).*$/)
+      .required(requiredField("Password")),
+  });
 
   const onOpenModal = () => {
     setShowModal(true);
@@ -21,7 +34,7 @@ const Header = ({ headerRef }) => {
 
   const onCloseModal = () => {
     setShowModal(false);
-    form.resetFields();
+    formik.resetForm();
   };
 
   const handleSubmitLogin = () => {
@@ -32,6 +45,18 @@ const Header = ({ headerRef }) => {
       signIn();
     }, 2000);
   };
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log(values);
+      handleSubmitLogin();
+    },
+  });
 
   return (
     <HeaderContainer ref={headerRef}>
@@ -55,13 +80,13 @@ const Header = ({ headerRef }) => {
             key="submit"
             type="primary"
             loading={confirmLoading}
-            onClick={form.submit}
+            onClick={formik.handleSubmit}
           >
             Sign In
           </Button>,
         ]}
       >
-        <SignInForm form={form} onSubmit={handleSubmitLogin} />
+        <SignInForm formik={formik} onSubmit={handleSubmitLogin} />
       </Modal>
     </HeaderContainer>
   );

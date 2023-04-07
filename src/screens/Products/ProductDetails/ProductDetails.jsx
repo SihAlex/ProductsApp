@@ -6,9 +6,9 @@ import Button from "@/components/Button/Button";
 import Alert from "@/components/Alert/Alert";
 import { ProductsContext } from "@/contexts/productsContext";
 import { categories } from "@/data/dummy";
+import { Field, Form, Formik } from "formik";
 
 const ProductDetails = () => {
-  const [text, setText] = useState("");
   const [product, setProduct] = useState(null);
   const [category, setCategory] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -25,13 +25,9 @@ const ProductDetails = () => {
     setCategory(category);
   }, [productId]);
 
-  const onChange = (e) => {
-    setText(e.target.value);
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = (values, { resetForm }) => {
     setShowAlert(true);
+    resetForm();
   };
 
   return (
@@ -42,20 +38,34 @@ const ProductDetails = () => {
           <p>Category: {category.name}</p>
           <p>Price (UAH): {product.price}</p>
           <p>Price (USD): {convert(product.price)}</p>
-          <Form onSubmit={onSubmit}>
-            <textarea onChange={onChange} value={text}></textarea>
-            <Button
-              style={{ maxWidth: "180px", marginTop: "20px" }}
-              type="submit"
-            >
-              Submit commentary
-            </Button>
-          </Form>
+          <Formik
+            initialValues={{
+              text: "",
+            }}
+            onSubmit={onSubmit}
+          >
+            <Form>
+              <label htmlFor="firstName">First Name</label>
+              <Field
+                as="textarea"
+                id="firstName"
+                name="text"
+                placeholder="Your commentary..."
+              />
+
+              <Button
+                style={{ maxWidth: "180px", marginTop: "20px" }}
+                type="submit"
+              >
+                Submit commentary
+              </Button>
+            </Form>
+          </Formik>
         </DetailsContainer>
       )}
 
       <Alert
-        message={`Your response '${text}' was succesfully submitted!`}
+        message={`Your response was succesfully submitted!`}
         show={showAlert}
         setShow={setShowAlert}
       />
@@ -65,12 +75,6 @@ const ProductDetails = () => {
 
 const DetailsContainer = styled.div`
   padding-left: 10%;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 30%;
 `;
 
 export default ProductDetails;
