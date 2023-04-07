@@ -1,10 +1,13 @@
 import { AuthContextProvider } from "./contexts/authContext";
+import { ProductsContextProvider } from "./contexts/productsContext";
 import MainRouter from "./routes/main";
 
 const App = () => {
   return (
     <AuthContextProvider>
-      <MainRouter />
+      <ProductsContextProvider>
+        <MainRouter />
+      </ProductsContextProvider>
     </AuthContextProvider>
   );
 };

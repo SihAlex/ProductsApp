@@ -1,9 +1,11 @@
+import { Spin } from "antd";
 import styled from "styled-components";
 
 const Button = (props) => {
-  const { onClick, children } = props;
+  const { onClick, children, loading } = props;
   return (
     <StyledButton {...props} onClick={onClick}>
+      {loading && <Spin size="small" style={{ marginRight: "5px" }} />}
       {children}
     </StyledButton>
   );

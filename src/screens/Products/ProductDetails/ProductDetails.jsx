@@ -1,21 +1,28 @@
 import { convert } from "@/utils/uahToDollar";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { products } from "@/data/dummy";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button/Button";
 import Alert from "@/components/Alert/Alert";
+import { ProductsContext } from "@/contexts/productsContext";
+import { categories } from "@/data/dummy";
 
 const ProductDetails = () => {
   const [text, setText] = useState("");
   const [product, setProduct] = useState(null);
+  const [category, setCategory] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
+  const { products } = useContext(ProductsContext);
 
   const { productId } = useParams();
 
   useEffect(() => {
-    const product = products.find((product) => product.id === +productId);
+    const product = products.find((product) => product.id === productId);
+    const category = categories.filter(
+      (category) => category.id === product.categoryId
+    );
     setProduct(product);
+    setCategory(category);
   }, [productId]);
 
   const onChange = (e) => {
@@ -32,7 +39,7 @@ const ProductDetails = () => {
       {product && (
         <DetailsContainer>
           <h3>{product.name}</h3>
-          <p>Category: {product.category.name}</p>
+          <p>Category: {category.name}</p>
           <p>Price (UAH): {product.price}</p>
           <p>Price (USD): {convert(product.price)}</p>
           <Form onSubmit={onSubmit}>

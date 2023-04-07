@@ -2,8 +2,12 @@ import styled from "styled-components";
 import { categories } from "@/data/dummy";
 import { NavLink } from "react-router-dom";
 import { setActive } from "@/routes/main";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/authContext";
 
 const Menu = () => {
+  const { user } = useContext(AuthContext);
+
   return (
     <Ul>
       {categories.map((category) => (
@@ -13,6 +17,11 @@ const Menu = () => {
           </NavLink>
         </li>
       ))}
+      {user.isLoggedIn && user.isAdmin && (
+        <NavLink to={`admin`} style={setActive}>
+          {"| Admin Panel |"}
+        </NavLink>
+      )}
     </Ul>
   );
 };

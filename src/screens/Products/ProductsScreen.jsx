@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import useCount from "@/hooks/useCount";
 import ProductsItem from "./ProductItem/ProductItem";
@@ -6,11 +6,13 @@ import useTotalCount from "@/hooks/useTotalCount";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import styles from "./ProductsScreen.module.css";
 import { TransitionGroup } from "react-transition-group";
+import { ProductsContext } from "@/contexts/productsContext";
 
-const ProductsScreen = ({ products }) => {
+const ProductsScreen = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [count, add, remove] = useCount();
   const [totalCount, renderedCount] = useTotalCount();
+  const { products } = useContext(ProductsContext);
 
   const [historyRoute, setHistoryRoute] = useState("");
 
@@ -40,7 +42,7 @@ const ProductsScreen = ({ products }) => {
             {products
               .filter((product) => {
                 return categoryId !== undefined && +categoryId !== 0
-                  ? product.category.id === +categoryId
+                  ? product.categoryId === +categoryId
                   : true;
               })
               .map((product) => (

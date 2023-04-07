@@ -13,11 +13,13 @@ const authReducer = (prevState, action) => {
       return {
         ...prevState,
         isLoggedIn: true,
+        isAdmin: true,
       };
     case authActions.SIGN_OUT:
       return {
         ...prevState,
         isLoggedIn: false,
+        isAdmin: false,
       };
     default:
       return {
@@ -28,6 +30,7 @@ const authReducer = (prevState, action) => {
 
 const defaultState = {
   isLoggedIn: false,
+  isAdmin: false,
 };
 
 export const AuthContextProvider = (props) => {
