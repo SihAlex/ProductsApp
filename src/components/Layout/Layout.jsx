@@ -2,13 +2,52 @@ import React, { useRef } from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import Header from "components/Header/Header";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  decrement,
+  decrementByAmount,
+  increment,
+  incrementByAmount,
+} from "@/store/reducers";
+import { getPhotos } from "@/store/actions";
 
 const Layout = () => {
   const headerRef = useRef(null);
+  const counter = useSelector((state) => state.counterReducer.value);
+  const dispatch = useDispatch();
+
+  const handleIncrement = () => {
+    dispatch(increment());
+  };
+
+  const handleDecrement = () => {
+    dispatch(decrement());
+  };
+
+  const handleIncrementBy5 = () => {
+    dispatch(incrementByAmount(5));
+  };
+
+  const handleDecrementBy5 = () => {
+    dispatch(decrementByAmount(5));
+  };
+
+  const handlePhotos = () => {
+    dispatch(getPhotos());
+  };
 
   return (
     <>
       <Header headerRef={headerRef} />
+
+      <button onClick={handleIncrement}>Increment</button>
+      <button onClick={handleDecrement}>Decrement</button>
+      <button onClick={handleIncrementBy5}>Increment by 5</button>
+      <button onClick={handleDecrementBy5}>Decrement by 5</button>
+
+      <p>{counter}</p>
+
+      <button onClick={handlePhotos}>Fetch photos</button>
 
       <ScrollView offset={headerRef.current && headerRef.current.clientHeight}>
         <Content>
